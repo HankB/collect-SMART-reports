@@ -26,7 +26,12 @@ Drives go bad. Taking a snapshot of the SMART data describes only part of the co
 
 * Copy `collect-drive-stats.sh` to some convenient location on the host which will collect the reports from various hosts.
 
-At present `record-drive-stats.sh` accepts one argument on the command line - the destination directory. If not provided, it will use the current working directory.
+At present `record-drive-stats.sh` accepts arguments on the command line 
+
+* First arg (if provided) is the location to which the reports will be saved. Default is `/var/local/drive-stats`.
+* Second and subsequent arguments are the drives to be reported as their entries in `/dev/` (e.g. `sda` or `nvme0n1` etc.) Default is to report all drives found by `/dev/sd?` and `/dev/nvme0n?`. In order to specify drives to be scanned, the storage directory *must* pe provided.
+
+<b>It would be *very* unwise to specify the first drive as `/dev/sda` and forget to include the storage directory when running as root.</b> Better command line arg  handling would reduce this risk.
 
 `collect-drive-stats.sh` takes no command line arguments. It will look for a file `/srvpool/srv/drive-stats/hosts` that lists the hosts from which it will collect reports. Lines starting with `#` will be ignored. Reports will be stored in `/srvpool/srv/drive-stats/<hostname>`
 
@@ -56,7 +61,7 @@ Some cleanup is needed to address `shellcheck` reported issues.
 
 ## Requirements
 
-install the `smartmontools` package onm hosts that generate the reports. `rsync` must be installed on all hosts.
+install the `smartmontools` package on hosts that generate the reports. `rsync` must be installed on all hosts.
 
 ```text
 sudo apt install smartmontools
