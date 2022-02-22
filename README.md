@@ -77,6 +77,7 @@ I generally appreciate contributions but reserve the right to reject any for any
 
 * Better processing of command line arguments.
 * Post collection analysis of data to highlight such things as growing defects or excess power on hours. Perhaps just summarize stats for individual drives over time.
+* Pointing out typos, confusing instructions, etc.
 
 ## Errata
 
