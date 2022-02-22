@@ -19,6 +19,7 @@ for i in $hosts
 do
     echo "pulling drive stats from $i"
     mkdir -p "${destination_dir}${i}"
-    rsync --out-format='%n' --stats -az "${i}:${source_dir}*" "${destination_dir}${i}"
+    rsync --out-format='%n' --stats -az "${i}:${source_dir}*" "${destination_dir}${i}" \
+         || true # 
 done
 
