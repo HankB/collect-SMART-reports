@@ -30,6 +30,24 @@ At present `record-drive-stats.sh` accepts one argument on the command line - th
 
 `collect-drive-stats.sh` takes no command line arguments. It will look for a file `/srvpool/srv/drive-stats/hosts` that lists the hosts from which it will collect reports. Lines starting with `#` will be ignored. Reports will be stored in `/srvpool/srv/drive-stats/<hostname>`
 
+## Deploying
+
+Just some biolerplate to facilitate deploying to numerous hosts.
+
+```text
+user=someuser
+remote=somehost
+scp record-drive-stats.sh drive-func.sh $user@$remote:/home/$user
+ssh-copy-id $user@$remote # if needed
+ssh $user@$remote
+sudo  mv record-drive-stats.sh drive-func.sh /usr/local/sbin
+sudo mkdir -p /var/local/drive-stats
+sudo chmod a+rwx /var/local/drive-stats
+sudo record-drive-stats.sh /var/local/drive-stats
+# add cron job (above)
+sudo crontab -e
+```
+
 ## Status
 
 Working locally - please report any issues. Presently a work in progress moving from a private repo to a public repo and adding proper documentation (`README.md`.)
