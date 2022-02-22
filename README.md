@@ -71,6 +71,13 @@ shellcheck drive-func-test.sh
 
 Testing requires the `shunit2` package.
 
+## Contributing
+
+I generally appreciate contributions but reserve the right to reject any for any reason. I think it wise that contributors assign non-exclusive copyright to me so I retain full control of this repo. (Feel free to argue otherwise.) Some areas I would particularly appreciate contribuytions include:
+
+* Better processing of command line arguments.
+* Post collection analysis of data to highlight such things as growing defects or excess power on hours. Perhaps just summarize stats for individual drives over time.
+
 ## Errata
 
 Drives raided on an LSI HBA require a special command option to report SMART statistics. This was accomplished using the `record-megaraid_drive-stats.sh` script. It is included as perhaps helpful but is no longer supported as I do not have any RAIDs hosted on one of these cards.
