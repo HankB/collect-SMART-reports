@@ -44,6 +44,8 @@ install the `smartmontools` package onm hosts that generate the reports. `rsync`
 sudo apt install smartmontools
 ```
 
+User requires `root` access on the hosts that will run `smartmontools`. User on the host that collects the reports requires passwordless `ssh` access to the other hosts. This requires appropriate permissions/ownership of files in `/srvpool/srv/drive-stats` on the remote hosts and `/srvpool/srv/drive-stats/` on the local host.
+
 ## Testing
 
 Install `shunit2` and `shellcheck`
