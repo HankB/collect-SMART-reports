@@ -1,0 +1,55 @@
+---
+# usage:
+# ansible-playbook deploy-recorder.yml -i pilog3b, -k --ask-become-pass
+- hosts: all
+  tasks:
+
+    - name: install required packages
+      become: yes
+      apt:
+        pkg:
+        - smartmontools
+        - rsync
+      register: SW_install
+
+    - name: show S/W install results
+      debug: var=SW_install.stdout_lines
+
+    - name: copy scripts
+      become: yes
+      copy:
+        dest: /usr/local/sbin
+        src: '{{item}}'
+        mode: a+rwx
+      with_items: 
+          - drive-func.sh
+          - record-drive-stats.sh
+
+    - name: create destination for SMART reports
+      become: yes
+      file:
+        path:  /var/local/drive-stats
+        state: directory
+        recurse: yes
+        owner: root
+        group: root
+        mode: a+rwx
+
+    - name: add cron job
+      become: yes
+      cron:
+        name: collect SMART stats
+        weekday: "5"
+        minute: "50"
+        hour: "2"
+        user: root
+        job: "/usr/local/sbin/record-drive-stats.sh /var/local/drive-stats/  >/tmp/SMART-stats.log 2>&1"
+
+    - name: test
+      become: yes
+      shell: "/usr/local/sbin/record-drive-stats.sh /var/local/drive-stats/"
+      register: test_cmd
+
+    - name: show test results
+      debug: var=test_cmd.stdout_lines
+
