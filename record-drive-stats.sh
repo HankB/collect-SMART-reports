@@ -11,13 +11,13 @@
 #
 # This version of the script will
 #  - store files in the directory where launched
-#  - handle SSD/HDD and/or nvme drives (anything matching /dev/sd? and /dev/nvme0n?)
+#  - handle SSD/HDD and/or nvme drives (anything matching /dev/sd? and /dev/nvme?)
 #  - not handle special arguments required by smartmontools (RAID)
 
 # installation and usage
 # sudo cp record-drive-stats.sh drive-func.sh /usr/local/sbin
 # command line
-# record-drive-stats.sh # default path to storage, all drives /dev/sd? and /dev/nvme0m?
+# record-drive-stats.sh # default path to storage, all drives /dev/sd? and /dev/nvme?
 # record-drive-stats.sh /path/to/storage # specify path to storage, all drives
 # record-drive-stats.sh /path/to/storage sdX sdY ... sdN # specify path and drives 
 
@@ -38,7 +38,7 @@ fi
 
 # function to store SMART report in a disk file.
 process_drive() {
-  drive=$1 # e.g. sda, nvme0n1 etc.
+  drive=$1 # e.g. sda, nvme0 etc.
   DISK_ID=`get_drive_id $i`
   echo "processing $i - /dev/disk/by-id/$DISK_ID"
   FILENAME="${DESTDIR}/${DISK_ID}.${DATE_STAMP}.SMART.txt"
@@ -54,9 +54,9 @@ if [ $# -ge 1 ] ; then
   done
 else
   cd /dev
-  for i in `echo sd? nvme0n?`
+  for i in `echo sd? nvme?`
   do
-    if [ "$i" != 'sd?' ] && [ "$i" != 'nvme0n?' ]
+    if [ "$i" != 'sd?' ] && [ "$i" != 'nvme?' ]
     then
       process_drive "$i"
     fi
