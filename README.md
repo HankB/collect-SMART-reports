@@ -53,6 +53,12 @@ sudo record-drive-stats.sh /var/local/drive-stats
 sudo crontab -e
 ```
 
+Or deploy using Ansible
+
+```text
+ansible-playbook deploy-recorder.yml -i $remote_hostname, -k --ask-become-pass
+```
+
 ## Status
 
 Working locally - please report any issues. Presently a work in progress moving from a private repo to a public repo and adding proper documentation (`README.md`.)
