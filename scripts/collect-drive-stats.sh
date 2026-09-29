@@ -12,8 +12,11 @@ set -o nounset
 ###
 
 source_dir="/var/local/drive-stats/"
-destination_dir="/srvpool/srv/drive-stats/" # to which the hostname will be appended.
-hosts="$(grep -v "^#" < $destination_dir/hosts)"
+destination_dir="/var/local/drive-stats/"
+hosts_file="/etc/drive-stats/hosts"
+
+hosts="$(grep -v '^[[:space:]]*#' "$hosts_file")"
+
 
 for i in $hosts
 do
