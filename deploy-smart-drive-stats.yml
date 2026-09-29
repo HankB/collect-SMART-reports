@@ -1,0 +1,14 @@
+---
+- name: Configure SMART report hosts
+  hosts: smart_report_hosts
+  become: true
+
+  roles:
+    - smart_reporter
+
+- name: Configure SMART collectors
+  hosts: smart_collectors
+  become: true
+
+  roles:
+    - smart_collector

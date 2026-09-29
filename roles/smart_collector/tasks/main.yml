@@ -1,0 +1,39 @@
+---
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+      - rsync
+    state: present
+    update_cache: true
+
+- name: Install collect-drive-stats.sh
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/scripts/collect-drive-stats.sh"
+    dest: /usr/local/sbin/collect-drive-stats.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create SMART report directory
+  ansible.builtin.file:
+    path: /var/local/drive-stats
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create drive-stats configuration directory
+  ansible.builtin.file:
+    path: /etc/drive-stats
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Generate SMART report host list
+  ansible.builtin.template:
+    src: hosts.j2
+    dest: /etc/drive-stats/hosts
+    owner: root
+    group: root
+    mode: '0644'

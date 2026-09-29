@@ -1,0 +1,41 @@
+---
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+      - smartmontools
+      - rsync
+    state: present
+    update_cache: true
+
+- name: Install drive-func.sh
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/scripts/drive-func.sh"
+    dest: /usr/local/sbin/drive-func.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install record-drive-stats.sh
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/scripts/record-drive-stats.sh"
+    dest: /usr/local/sbin/record-drive-stats.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create SMART report directory
+  ansible.builtin.file:
+    path: /var/local/drive-stats
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install SMART statistics cron job
+  ansible.builtin.cron:
+    name: collect SMART stats
+    weekday: '5'
+    minute: '50'
+    hour: '2'
+    user: root
+    job: '/usr/local/sbin/record-drive-stats.sh /var/local/drive-stats/ >/tmp/SMART-stats.log 2>&1'
