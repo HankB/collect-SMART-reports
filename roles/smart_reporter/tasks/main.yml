@@ -27,8 +27,8 @@
   ansible.builtin.file:
     path: /var/local/drive-stats
     state: directory
-    owner: root
-    group: root
+    owner: hbarta
+    group: hbarta
     mode: '0755'
 
 - name: Install SMART statistics cron job
