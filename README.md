@@ -7,6 +7,11 @@ Collect SMART drive reports to a central location. Happens in two steps.
 
 By convention, drive stats are stored locally in `/var/local/drive-stats` and collected centrally in `/var/local/drive-stats` (and perhaps in the future, in `/var/local/drive-stats/<hostname>`.)
 
+## AI/LLM warning
+
+I have been using ChatGPT heavily during the development of this upgrade. If you choose not to use projects that employ AI/LLMs, then move on. ChatGPT has been pretty rough in this effort. It continually produces results that are "almost correct." Perhaps I'm just not giving it sufficnent guidance or the free web version is intentionally weak. (That would be a bad strategy by OpenAI as my experience with the free version doesn't leave me inclined to send them money.)
+
+
 ## Motivation
 
 Drives go bad. Taking a snapshot of the SMART data describes only part of the condition. It is useful to know about changes in status over time and this package collects the SMART reports on a periodic basis so they can be examined for trends. Perhaps someday this can be automated.
@@ -55,15 +60,35 @@ sudo crontab -e
 
 Or deploy using Ansible
 
+There is a sister project in use to help manage a global inventory. <https://github.com/HankB/ansible-inventory> and the inventory for this playbook will include:
+
 ```text
-ansible-playbook deploy-recorder.yml -i $remote_hostname, -k --ask-become-pass
+# Ansible inventory for SMART drive statistics.
+
+[smart_report_hosts]
+oak
+dragohost
+
+[smart_collectors]
+oak
+```
+
+If that facility is employed, the `ansible-playbook` invocation could look like:
+
+```text
+ansible-playbook -i /etc/ansible/inventory deploy-smart-drive-stats.yml -K
 ```
 
 ## Status
 
-Working locally - please report any issues. Presently a work in progress moving from a private repo to a public repo and adding proper documentation (`README.md`.)
+WIP to upgrade with the following goals:
 
-Some cleanup is needed to address `shellcheck` reported issues.
+* Capture NVME as well as SATA drives.
+* Streamline saving to a common host - eliminate the need to manually add new hosts to the list.
+* Streamline deployment using Ansible.
+
+* 2026-09-11 `record-drive-stats.sh` has been modified to record SMART stats for NVME drives and has seen limited testing on local hosts.
+* 2026-09-27 Presently working on the facility to collect scripts to a common location.
 
 ## Requirements
 
@@ -110,4 +135,4 @@ I generally appreciate contributions but reserve the right to reject any for any
 
 ## Errata
 
-Drives raided on an LSI HBA require a special command option to report SMART statistics. This was accomplished using the `record-megaraid_drive-stats.sh` script. It is included as perhaps helpful but is no longer supported as I do not have any RAIDs hosted on one of these cards.
+Drives raided on an LSI HBA require a special command option to report SMART statistics. This was accomplished using the `record-megaraid_drive-stats.sh` script. It is included as perhaps helpful but is no longer supported as I do not have any RAIDs hosted on one of these cards. 2026-09-30 update: This may no longer be needed. Drives on various HBAs seem to be directly accessible to `smartctl`.
