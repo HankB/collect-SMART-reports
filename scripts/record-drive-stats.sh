@@ -1,4 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Bash3 Boilerplate. Copyright (c) 2014, kvz.io
+
+set -o errexit
+set -o pipefail
+set -o nounset
+############### end of Boilerplate
 
 # Capture drive statistics and save for historical reference.
 #
@@ -11,11 +17,10 @@
 # HBA, and MegaRAID devices.
 
 
-set -u
-
+umask 022 # files readable by ordinary user
 
 PROGRAM=${0##*/}
-DESTDIR=$(pwd)
+DESTDIR="/var/local/drive-stats"
 DATE_STAMP=$(date +%Y-%m-%d)
 VERBOSE=false
 
@@ -27,7 +32,7 @@ Usage: $PROGRAM [OPTIONS]
 Capture SMART reports for storage devices.
 
 Options:
-    -d, --directory DIR    Store reports in DIR.
+    -d, --directory DIR    Store reports in DIR. Default /var/local/drive-stats/
     -D, --device DEVICE    Process DEVICE instead of automatic discovery.
     -a, --all              Process all devices found by smartctl.
                           This is the default.
