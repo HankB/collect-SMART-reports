@@ -137,8 +137,8 @@ Testing requires the `shunit2` package.
 
 The system consists of two operations.
 
-* recorder - A process runs weekly on any host with NVME and SATA/SAS drives and records the results from `smartctl -a`.
-* collector - This process runs on hosts which pull the reports to a central location for storage. The original reports remain on the recorders.
+* recorder - A process runs weekly on any host with NVME and SATA/SAS drives and records the results from `smartctl -a`. The recorder is scheduled in the wee hours but if the host is sleeping at that time (as certainly the operator will be) the process will run when it awakes (or reboots.)
+* collector - This process runs on hosts which pull the reports to a central location for storage. The original reports remain on the recorders. The collector is scheduled to run a bit later in the wee hours with a random delay of up to 20 minutes to avoid all collectors hitting the recorders at the same instant. In order to accommodate the recorders that sleep through the night, the collector will run hourly (again with the random 20 minute delay) until just after 1200.
 
 Multiple recorders are supported as well as multiple collectors.
 
