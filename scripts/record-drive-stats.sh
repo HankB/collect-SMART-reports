@@ -67,6 +67,25 @@ die() {
     exit 1
 }
 
+handle_smartctl_status() {
+    local rc=$1
+    local device=$2
+
+    if (( rc == 0 )); then
+        return 0
+    fi
+
+    if (( rc & 0x07 )); then
+        printf '%s: smartctl encountered an error for %s (exit %d)\n' \
+            "$PROGRAM" "$device" "$rc" >&2
+        return 1
+    fi
+
+    printf '%s: smartctl reported SMART findings for %s (exit %d)\n' \
+        "$PROGRAM" "$device" "$rc" >&2
+
+    return 0
+}
 
 # Source external functions.
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
@@ -121,12 +140,9 @@ process_scan_entry() {
         smartctl_rc=$?
     fi
 
-    if [[ $smartctl_rc -ne 0 ]]; then
-        printf '%s: smartctl failed for %s (exit %d)\n' \
-            "$PROGRAM" "$device" "$smartctl_rc" >&2
-        return "$smartctl_rc"
+    if ! handle_smartctl_status "$smartctl_rc" "$device"; then
+        return 1
     fi
-
     return 0
 }
 
@@ -198,8 +214,8 @@ process_all_devices() {
     local device_type
     local rc=0
 
-    scan_output=$(get_smartctl_scan)
-    if [[ $? -ne 0 ]]; then
+    
+    if ! scan_output=$(get_smartctl_scan) ; then
         printf '%s: smartctl --scan-open failed\n' "$PROGRAM" >&2
         return 1
     fi

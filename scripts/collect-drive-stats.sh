@@ -20,9 +20,18 @@ hosts="$(grep -v '^[[:space:]]*#' "$hosts_file")"
 
 for i in $hosts
 do
-    echo "pulling drive stats from $i"
     mkdir -p "${destination_dir}${i}"
-    rsync --out-format='%n' --stats -az "${i}:${source_dir}*" "${destination_dir}${i}" \
-         || true # 
+    if [ "$i" == "$HOSTNAME" ]
+    then
+        echo "linking drive stats for $i" ## no desire for rsync on local host
+        for smart_report in ${destination_dir}*.SMART.txt
+        do
+            ln "${smart_report}" "${destination_dir}${i}/" || true # when already exist
+        done
+    else
+        echo "pulling drive stats from $i"
+        rsync --out-format='%n' --no-dirs --stats -z -lptgoD "${i}:${source_dir}*" "${destination_dir}${i}" \
+            || true # 
+    fi
 done
 

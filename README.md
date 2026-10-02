@@ -79,14 +79,21 @@ If that facility is employed, the `ansible-playbook` invocation could look like:
 ansible-playbook -i /etc/ansible/inventory deploy-smart-drive-stats.yml -K
 ```
 
+NB: If the inventory is updated and deployed, it is necessary to repeat this playbook as well.
+
+The `collect-drive-stats.sh`
+
 ## Status
 
 WIP to upgrade with the following goals:
 
-* Capture NVME as well as SATA drives.
-* Streamline saving to a common host - eliminate the need to manually add new hosts to the list.
-* Streamline deployment using Ansible.
+* Produce Systemd timer and service flies to run the recorder and collector scripts.
+  * recorder 1/week for the hosts recording SMART stats.
+  * collector 1/week a bit later than the recorder scripts are scheduled.
 
+* as of 2026-10-01 the scripts are deployed to the two classes of host.
+* as of 2026-10-01 Capture NVME as well as SATA drives.
+* as of 2026-10-01 Streamline saving to a common host - eliminate the need to manually add new hosts to the list.
 * 2026-09-11 `record-drive-stats.sh` has been modified to record SMART stats for NVME drives and has seen limited testing on local hosts.
 * 2026-09-27 Presently working on the facility to collect scripts to a common location.
 
