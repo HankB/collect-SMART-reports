@@ -3,7 +3,7 @@ Description=SMART drive statistics collection
 
 [Timer]
 {% for time in smart_collection_times %}
-OnCalendar=Fri *-*-* {{ time }}
+OnCalendar=Sat *-*-* {{ time }}
 {% endfor %}
 RandomizedDelaySec={{ smart_collection_randomized_delay }}
 Persistent=true
