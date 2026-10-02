@@ -1,0 +1,6 @@
+[Unit]
+Description=Record SMART drive statistics
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/record-drive-stats.sh --directory /var/local/drive-stats/

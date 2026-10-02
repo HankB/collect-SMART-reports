@@ -37,3 +37,29 @@
     owner: root
     group: root
     mode: '0644'
+
+- name: Install SMART collector service
+  ansible.builtin.template:
+    src: smart-drive-stats-collector.service.j2
+    dest: /etc/systemd/system/smart-drive-stats-collector.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Install SMART collector timer
+  ansible.builtin.template:
+    src: smart-drive-stats-collector.timer.j2
+    dest: /etc/systemd/system/smart-drive-stats-collector.timer
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Enable and start SMART collector timer
+  ansible.builtin.systemd:
+    name: smart-drive-stats-collector.timer
+    enabled: true
+    state: started

@@ -9,7 +9,7 @@ By convention, drive stats are stored locally in `/var/local/drive-stats` and co
 
 ## AI/LLM warning
 
-I have been using ChatGPT heavily during the development of this upgrade. If you choose not to use projects that employ AI/LLMs, then move on. ChatGPT has been pretty rough in this effort. It continually produces results that are "almost correct." Perhaps I'm just not giving it sufficnent guidance or the free web version is intentionally weak. (That would be a bad strategy by OpenAI as my experience with the free version doesn't leave me inclined to send them money.)
+I have been using ChatGPT heavily during the development of this upgrade. If you choose not to use projects that employ AI/LLMs, then move on. ChatGPT has been pretty rough in this effort. It continually produces results that are "almost correct." Perhaps I'm just not giving it sufficnent guidance or the free web version is intentionally weak. (That would be a bad strategy by OpenAI as my experience with the free version doesn't leave me inclined to send them money.) It seemed to do well with Ansible playbooks and those required minimal modifications.
 
 
 ## Motivation
@@ -42,7 +42,7 @@ At present `record-drive-stats.sh` accepts arguments on the command line
 
 ## Deploying
 
-Just some biolerplate to facilitate deploying to numerous hosts.
+### *DEPRECATED* Just some biolerplate to facilitate deploying to numerous hosts.
 
 ```text
 user=someuser
@@ -58,7 +58,7 @@ sudo record-drive-stats.sh /var/local/drive-stats
 sudo crontab -e
 ```
 
-Or deploy using Ansible
+### Deploy using Ansible
 
 There is a sister project in use to help manage a global inventory. <https://github.com/HankB/ansible-inventory> and the inventory for this playbook will include:
 
@@ -87,27 +87,28 @@ The `collect-drive-stats.sh`
 
 WIP to upgrade with the following goals:
 
-* Produce Systemd timer and service flies to run the recorder and collector scripts.
-  * recorder 1/week for the hosts recording SMART stats.
-  * collector 1/week a bit later than the recorder scripts are scheduled.
-
+* 2026-10-02 playbooks upgraded to install Systemd timer and service files to crive processing.
 * as of 2026-10-01 the scripts are deployed to the two classes of host.
 * as of 2026-10-01 Capture NVME as well as SATA drives.
 * as of 2026-10-01 Streamline saving to a common host - eliminate the need to manually add new hosts to the list.
 * 2026-09-11 `record-drive-stats.sh` has been modified to record SMART stats for NVME drives and has seen limited testing on local hosts.
 * 2026-09-27 Presently working on the facility to collect scripts to a common location.
 
+('as of' means I was slacking and not updating status to match progress.)
+
 ## Requirements
 
-install the `smartmontools` package on hosts that generate the reports. `rsync` must be installed on all hosts.
+(These requirements are rewritten in the context of deployment using Ansible.)
 
-```text
-sudo apt install smartmontools
-```
+The playbooks will generally take care of required applications, directories and Systemd timers and service units to manage operation. That leaves the requirement that the Ansible controller has passwordless SSH access to the collectors and recorders. Recorders and collectors are described below under Operation. (Not a hard requirement but it will be tiresome to enter the password for every connection.)
 
-User requires `root` access on the hosts that will run `smartmontools`. User on the host that collects the reports requires passwordless `ssh` access to the other hosts. This requires appropriate permissions/ownership of files in `/srvpool/srv/drive-stats` on the remote hosts and `/srvpool/srv/drive-stats/` on the local host.
+The Ansible controller need not be a recorder or collector.
+
+The collectors require passwordless (non-root) acces to the recorders.
 
 ## Testing
+
+*Testing is on the TODO list* At present only live 'in-situ' testing has been performed.
 
 Install `shunit2` and `shellcheck`
 
@@ -131,6 +132,15 @@ shellcheck drive-func-test.sh
 ```
 
 Testing requires the `shunit2` package.
+
+## Operation
+
+The system consists of two operations.
+
+* recorder - A process runs weekly on any host with NVME and SATA/SAS drives and records the results from `smartctl -a`.
+* collector - This process runs on hosts which pull the reports to a central location for storage. The original reports remain on the recorders.
+
+Multiple recorders are supported as well as multiple collectors.
 
 ## Contributing
 

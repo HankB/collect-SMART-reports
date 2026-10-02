@@ -1,0 +1,7 @@
+[Unit]
+Description=Collect SMART drive statistics
+
+[Service]
+Type=oneshot
+User=hbarta
+ExecStart=/usr/local/sbin/collect-drive-stats.sh

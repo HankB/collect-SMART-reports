@@ -31,11 +31,28 @@
     group: hbarta
     mode: '0755'
 
-- name: Install SMART statistics cron job
-  ansible.builtin.cron:
-    name: collect SMART stats
-    weekday: '5'
-    minute: '50'
-    hour: '2'
-    user: root
-    job: '/usr/local/sbin/record-drive-stats.sh /var/local/drive-stats/ >/tmp/SMART-stats.log 2>&1'
+- name: Install SMART recorder service
+  ansible.builtin.template:
+    src: smart-drive-stats-recorder.service.j2
+    dest: /etc/systemd/system/smart-drive-stats-recorder.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Install SMART recorder timer
+  ansible.builtin.template:
+    src: smart-drive-stats-recorder.timer.j2
+    dest: /etc/systemd/system/smart-drive-stats-recorder.timer
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Enable and start SMART recorder timer
+  ansible.builtin.systemd:
+    name: smart-drive-stats-recorder.timer
+    enabled: true
+    state: started
