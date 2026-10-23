@@ -1,0 +1,7 @@
+# Managed by Ansible. Do not edit.
+#
+# Hosts in the smart_report_hosts inventory group.
+
+{% for host in groups['smart_report_hosts'] %}
+{{ host }}
+{% endfor %}
