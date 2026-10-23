@@ -87,6 +87,7 @@ The `collect-drive-stats.sh`
 
 WIP to upgrade with the following goals:
 
+* 2026-10-23 Reviewed operation in home lab. All seems well except that the stats for the collector remain in `/var/local/drive-stats` instead f being copied to their respective subdirectory.
 * 2026-10-02 playbooks upgraded to install Systemd timer and service files to crive processing.
 * as of 2026-10-01 the scripts are deployed to the two classes of host.
 * as of 2026-10-01 Capture NVME as well as SATA drives.
