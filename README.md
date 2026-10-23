@@ -143,6 +143,36 @@ The system consists of two operations.
 
 Multiple recorders are supported as well as multiple collectors.
 
+## Monitoring
+
+### Files 
+
+Check the storage on any involved host. For example, a hist that records SMART stats:
+
+```text
+hbarta@ester:~$ ls -l /var/local/drive-stats/
+total 12
+-rw-r--r-- 1 root root 3060 Oct  9 11:56 nvme-SAMSUNG_MZVL8512HELU-00BH1_S79SNX3X976812.2026-10-09.SMART.txt
+-rw-r--r-- 1 root root 3060 Oct 16 11:32 nvme-SAMSUNG_MZVL8512HELU-00BH1_S79SNX3X976812.2026-10-16.SMART.txt
+-rw-r--r-- 1 root root 3060 Oct 23 13:44 nvme-SAMSUNG_MZVL8512HELU-00BH1_S79SNX3X976812.2026-10-23.SMART.txt
+hbarta@ester:~$ 
+```
+
+There should be more on the hosts that collect the reports which will then be found in their respective directories.
+
+```text
+hbarta@oak:~$ ls -l /var/local/drive-stats/ester
+total 5
+-rw-r--r-- 1 hbarta hbarta 3060 Oct  9 11:56 nvme-SAMSUNG_MZVL8512HELU-00BH1_S79SNX3X976812.2026-10-09.SMART.txt
+hbarta@oak:~$ 
+```
+
+(`ester` is a laptop that spends a lot of time suspended.)
+
+### Systemd units
+
+[see systemd monitoring](./systemd-monitoring.md)
+
 ## Contributing
 
 I generally appreciate contributions but reserve the right to reject any for any reason. I think it wise that contributors assign non-exclusive copyright to me so I retain full control of this repo. (Feel free to argue otherwise.) Some areas I would particularly appreciate contribuytions include:
